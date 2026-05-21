@@ -1359,7 +1359,7 @@ function renderQuestion() {
   if (answered) {
     const isCorrect = userAns === q.answer;
     resultBanner = `<div class="result-banner ${isCorrect?'correct-banner':'wrong-banner'}">
-      ${isCorrect ? '✓ پاسخ Correct!' : `✗ پاسخ اشتباه — جواب درست: ${String.fromCharCode(65+q.answer)}`}
+      ${isCorrect ? '✓Correct!' : `✗ پاسخ اشتباه — جواب درست: ${String.fromCharCode(65+q.answer)}`}
     </div>`;
   }
 
