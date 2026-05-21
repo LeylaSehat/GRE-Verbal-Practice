@@ -1,0 +1,1552 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GRE Verbal Practice</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #102033;
+    --parchment: #f5f7fb;
+    --gold: #2563eb;
+    --gold-light: #60a5fa;
+    --deep-red: #dc2626;
+    --sage: #059669;
+    --correct: #16a34a;
+    --wrong: #dc2626;
+    --muted: #64748b;
+    --card-bg: #ffffff;
+    --border: #d8e1ee;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', Arial, sans-serif;
+    background: var(--parchment);
+    color: var(--ink);
+    min-height: 100vh;
+    background-image:
+      radial-gradient(ellipse at 20% 50%, rgba(200,150,62,0.06) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 20%, rgba(139,32,32,0.04) 0%, transparent 50%);
+  }
+
+  /* ─── HEADER ─── */
+  header {
+    background: var(--ink);
+    color: var(--parchment);
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 40px,
+      rgba(200,150,62,0.04) 40px,
+      rgba(200,150,62,0.04) 41px
+    );
+  }
+  .header-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 28px 24px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    z-index: 1;
+  }
+  .header-title {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .header-en {
+    font-family: 'Inter', Arial, sans-serif;
+    font-size: 28px;
+    font-weight: 900;
+    letter-spacing: -0.5px;
+    color: var(--gold-light);
+    line-height: 1;
+  }
+  .header-fa {
+    font-size: 13px;
+    color: rgba(245,239,228,0.6);
+    font-weight: 300;
+    letter-spacing: 0.5px;
+  }
+  .header-badge {
+    background: var(--gold);
+    color: var(--ink);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* ─── PROGRESS BAR ─── */
+  .progress-wrap {
+    background: rgba(0,0,0,0.3);
+    height: 3px;
+  }
+  .progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold), var(--gold-light));
+    transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  /* ─── STATS STRIP ─── */
+  .stats-strip {
+    background: var(--ink);
+    border-top: 1px solid rgba(200,150,62,0.2);
+    color: var(--parchment);
+  }
+  .stats-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 10px 24px;
+    display: flex;
+    gap: 24px;
+    align-items: center;
+    font-size: 12px;
+  }
+  .stat-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .stat-label { color: rgba(245,239,228,0.45); font-size: 11px; }
+  .stat-val { font-weight: 700; color: var(--gold-light); font-family: 'Inter', Arial, sans-serif; font-size: 15px; }
+  .stat-correct .stat-val { color: #7ecf8c; }
+  .stat-wrong .stat-val { color: #f08080; }
+  .stat-sep { width: 1px; height: 20px; background: rgba(255,255,255,0.1); }
+
+  /* ─── MAIN AREA ─── */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 32px 24px 60px;
+  }
+
+  /* ─── CATEGORY SELECTOR ─── */
+  .section-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--muted);
+    margin-bottom: 12px;
+    font-weight: 600;
+  }
+  .category-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+  }
+  .cat-btn {
+    padding: 7px 14px;
+    border-radius: 20px;
+    border: 1.5px solid var(--border);
+    background: var(--card-bg);
+    font-family: 'Inter', Arial, sans-serif;
+    font-size: 12px;
+    cursor: pointer;
+    color: var(--muted);
+    transition: all 0.2s;
+    font-weight: 500;
+  }
+  .cat-btn:hover { border-color: var(--gold); color: var(--gold); }
+  .cat-btn.active {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--gold-light);
+  }
+
+  /* ─── QUESTION CARD ─── */
+  .q-card {
+    background: var(--card-bg);
+    border: 1.5px solid var(--border);
+    border-radius: 16px;
+    padding: 32px 36px;
+    margin-bottom: 20px;
+    position: relative;
+    box-shadow: 0 2px 20px rgba(26,18,9,0.06);
+    animation: slideIn 0.35s cubic-bezier(0.4,0,0.2,1);
+  }
+  @keyframes slideIn {
+    from { opacity:0; transform: translateY(16px); }
+    to { opacity:1; transform: translateY(0); }
+  }
+
+  .q-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  .q-num {
+    font-family: 'Inter', Arial, sans-serif;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .q-type-badge {
+    padding: 3px 10px;
+    border-radius: 10px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+  .badge-vocab { background: rgba(200,150,62,0.15); color: var(--gold); }
+  .badge-reading { background: rgba(74,103,65,0.15); color: var(--sage); }
+  .badge-sentence { background: rgba(139,32,32,0.12); color: var(--deep-red); }
+  .badge-analogy { background: rgba(100,80,160,0.12); color: #7060c0; }
+
+  .q-difficulty {
+    margin-right: auto;
+    display: flex;
+    gap: 3px;
+  }
+  .diff-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--border);
+  }
+  .diff-dot.filled { background: var(--gold); }
+
+  .q-text {
+    font-family: 'Merriweather', Georgia, serif;
+    font-size: 19px;
+    line-height: 1.65;
+    color: var(--ink);
+    margin-bottom: 8px;
+    direction: ltr;
+    text-align: left;
+  }
+  .q-translation {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 24px;
+    padding: 10px 14px;
+    background: rgba(200,150,62,0.06);
+    border-radius: 8px;
+    border-right: 3px solid var(--gold);
+    line-height: 1.7;
+    direction: ltr;
+    text-align: left;
+  }
+
+  /* ─── CHOICES ─── */
+  .choices { display: flex; flex-direction: column; gap: 10px; }
+  .choice {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 18px;
+    border-radius: 10px;
+    border: 1.5px solid var(--border);
+    background: #fff;
+    cursor: pointer;
+    transition: all 0.18s;
+    text-align: left;
+    direction: ltr;
+  }
+  .choice:hover:not(.locked) {
+    border-color: var(--gold);
+    background: rgba(200,150,62,0.04);
+    transform: translateX(-2px);
+  }
+  .choice.selected { border-color: var(--gold); background: rgba(200,150,62,0.08); }
+  .choice.correct { border-color: var(--correct); background: rgba(45,106,63,0.08); }
+  .choice.wrong { border-color: var(--wrong); background: rgba(139,32,32,0.07); }
+  .choice.locked { cursor: default; }
+  .choice-letter {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: var(--parchment);
+    border: 1.5px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Inter', Arial, sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    flex-shrink: 0;
+    transition: all 0.18s;
+    color: var(--muted);
+    margin-top: 1px;
+  }
+  .choice.selected .choice-letter { background: var(--gold); border-color: var(--gold); color: #fff; }
+  .choice.correct .choice-letter { background: var(--correct); border-color: var(--correct); color: #fff; }
+  .choice.wrong .choice-letter { background: var(--wrong); border-color: var(--wrong); color: #fff; }
+  .choice-text {
+    font-family: 'Merriweather', Georgia, serif;
+    font-size: 16px;
+    color: var(--ink);
+    line-height: 1.5;
+    flex: 1;
+  }
+  .choice-fa {
+    font-size: 12px;
+    color: var(--muted);
+    display: block;
+    font-family: 'Inter', Arial, sans-serif;
+    margin-top: 2px;
+    direction: ltr;
+    text-align: left;
+  }
+
+  /* ─── EXPLANATION ─── */
+  .explanation {
+    margin-top: 20px;
+    padding: 18px 22px;
+    border-radius: 10px;
+    background: rgba(26,18,9,0.04);
+    border: 1px solid var(--border);
+    animation: fadeIn 0.3s ease;
+  }
+  @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+  .explanation-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .explanation-icon { font-size: 16px; }
+  .explanation-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+  }
+  .explanation-text {
+    font-family: 'Merriweather', Georgia, serif;
+    font-size: 15.5px;
+    color: var(--ink);
+    line-height: 1.7;
+    direction: ltr;
+    text-align: left;
+  }
+  .explanation-fa {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 8px;
+    direction: ltr;
+    text-align: left;
+    line-height: 1.8;
+  }
+
+  /* ─── RESULT BANNER ─── */
+  .result-banner {
+    padding: 12px 18px;
+    border-radius: 8px;
+    margin-top: 16px;
+    font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    animation: fadeIn 0.3s ease;
+  }
+  .result-banner.correct-banner { background: rgba(45,106,63,0.1); color: var(--correct); }
+  .result-banner.wrong-banner { background: rgba(139,32,32,0.1); color: var(--wrong); }
+
+  /* ─── NAV BUTTONS ─── */
+  .nav-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 20px;
+  }
+  .btn {
+    padding: 12px 24px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-family: 'Inter', Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .btn-primary {
+    background: var(--ink);
+    color: var(--gold-light);
+  }
+  .btn-primary:hover { background: #2d2416; transform: translateY(-1px); }
+  .btn-secondary {
+    background: var(--card-bg);
+    color: var(--muted);
+    border: 1.5px solid var(--border);
+  }
+  .btn-secondary:hover { border-color: var(--gold); color: var(--gold); }
+  .btn-submit {
+    background: var(--gold);
+    color: var(--ink);
+    margin-right: auto;
+    margin-left: auto;
+  }
+  .btn-submit:hover { background: var(--gold-light); transform: translateY(-1px); }
+  .btn:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
+
+  /* ─── SUMMARY SCREEN ─── */
+  #summary {
+    display: none;
+    animation: slideIn 0.4s ease;
+  }
+  .summary-card {
+    background: var(--card-bg);
+    border: 1.5px solid var(--border);
+    border-radius: 20px;
+    padding: 48px 40px;
+    text-align: center;
+    box-shadow: 0 4px 40px rgba(26,18,9,0.08);
+  }
+  .summary-icon { font-size: 56px; margin-bottom: 16px; }
+  .summary-title {
+    font-family: 'Inter', Arial, sans-serif;
+    font-size: 32px;
+    font-weight: 900;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+  .summary-subtitle { color: var(--muted); font-size: 14px; margin-bottom: 36px; }
+  .summary-score {
+    font-family: 'Inter', Arial, sans-serif;
+    font-size: 72px;
+    font-weight: 900;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .summary-denom { font-size: 20px; color: var(--muted); margin-bottom: 32px; }
+  .summary-stats {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    margin-bottom: 36px;
+  }
+  .summary-stat { text-align: center; }
+  .summary-stat-val {
+    font-family: 'Inter', Arial, sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+  }
+  .summary-stat-lbl { font-size: 12px; color: var(--muted); margin-top: 4px; }
+  .s-correct .summary-stat-val { color: var(--correct); }
+  .s-wrong .summary-stat-val { color: var(--wrong); }
+  .s-skip .summary-stat-val { color: var(--muted); }
+  .summary-breakdown {
+    background: rgba(200,150,62,0.06);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 28px;
+    text-align: left;
+  }
+  .breakdown-title {
+    font-size: 11px; text-transform: uppercase;
+    letter-spacing: 1.5px; color: var(--muted); margin-bottom: 14px;
+    font-weight: 700; text-align: center;
+  }
+  .breakdown-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px dashed var(--border);
+    direction: ltr;
+    font-size: 13px;
+  }
+  .breakdown-row:last-child { border-bottom: none; }
+
+  /* ─── WORD INDEX ─── */
+  #wordlist { display: none; animation: slideIn 0.4s ease; }
+  .wordlist-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 12px;
+  }
+  .word-chip {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  .word-en {
+    font-family: 'Merriweather', Georgia, serif;
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--ink);
+    direction: ltr;
+  }
+  .word-fa {
+    font-size: 12px;
+    color: var(--muted);
+    direction: ltr;
+    text-align: left;
+  }
+  .word-status {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 5px;
+  }
+  .ws-correct { background: var(--correct); }
+  .ws-wrong { background: var(--wrong); }
+  .ws-unattempted { background: var(--border); }
+
+  .tab-row {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 24px;
+    background: rgba(0,0,0,0.05);
+    padding: 4px;
+    border-radius: 12px;
+    width: fit-content;
+  }
+  .tab-btn {
+    padding: 8px 20px;
+    border-radius: 9px;
+    border: none;
+    background: transparent;
+    font-family: 'Inter', Arial, sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--muted);
+    transition: all 0.2s;
+  }
+  .tab-btn.active {
+    background: var(--ink);
+    color: var(--gold-light);
+  }
+
+  .q-counter-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 24px;
+  }
+  .q-nav-dot {
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    border: 1.5px solid var(--border);
+    background: var(--card-bg);
+    font-size: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--muted);
+    transition: all 0.15s;
+    font-family: 'Inter', Arial, sans-serif;
+  }
+  .q-nav-dot:hover { border-color: var(--gold); color: var(--gold); }
+  .q-nav-dot.current { background: var(--ink); border-color: var(--ink); color: var(--gold-light); }
+  .q-nav-dot.qd-correct { background: rgba(45,106,63,0.2); border-color: var(--correct); color: var(--correct); }
+  .q-nav-dot.qd-wrong { background: rgba(139,32,32,0.15); border-color: var(--wrong); color: var(--wrong); }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 600px) {
+    .header-inner { flex-direction: column; gap: 12px; align-items: flex-start; }
+    .q-card { padding: 22px 18px; }
+    .q-text { font-size: 16px; }
+    main { padding: 20px 14px 50px; }
+    .summary-card { padding: 32px 20px; }
+    .summary-stats { gap: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="header-title">
+      <span class="header-en">GRE Verbal Reasoning</span>
+      <span class="header-fa">Interactive GRE verbal practice with 100 questions</span>
+    </div>
+    <span class="header-badge">100 Questions</span>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-bar" id="progressBar" style="width:0%"></div>
+  </div>
+  <div class="stats-strip">
+    <div class="stats-inner">
+      <div class="stat-item"><span class="stat-label">Question</span>&nbsp;<span class="stat-val" id="statQ">1</span><span class="stat-label">/100</span></div>
+      <div class="stat-sep"></div>
+      <div class="stat-item stat-correct"><span class="stat-label">Correct</span>&nbsp;<span class="stat-val" id="statC">0</span></div>
+      <div class="stat-sep"></div>
+      <div class="stat-item stat-wrong"><span class="stat-label">Wrong</span>&nbsp;<span class="stat-val" id="statW">0</span></div>
+      <div class="stat-sep"></div>
+      <div class="stat-item"><span class="stat-label">Accuracy</span>&nbsp;<span class="stat-val" id="statAcc">—</span></div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div id="quizView">
+    <p class="section-label">Choose a section</p>
+    <div class="category-row" id="catRow">
+      <button class="cat-btn active" onclick="filterCat('all',this)"> Question </button>
+      <button class="cat-btn" onclick="filterCat('Vocabulary',this)">Vocabulary</button>
+      <button class="cat-btn" onclick="filterCat('Sentence Equivalence',this)">Sentence Equivalence</button>
+      <button class="cat-btn" onclick="filterCat('Text Completion',this)">Text Completion</button>
+      <button class="cat-btn" onclick="filterCat('Reading Comprehension',this)">Reading Comprehension</button>
+      <button class="cat-btn" onclick="filterCat('Analogies',this)">Analogies</button>
+    </div>
+
+    <div class="q-counter-nav" id="qCounterNav"></div>
+
+    <div class="q-card" id="qCard">
+      <!-- Question renders here -->
+    </div>
+
+    <div class="nav-row">
+      <button class="btn btn-secondary" id="btnPrev" onclick="goTo(currentIndex-1)">← Previous</button>
+      <button class="btn btn-submit" id="btnSubmit" onclick="submitAnswer()">Submit Answer ✓</button>
+      <button class="btn btn-primary" id="btnNext" onclick="goTo(currentIndex+1)">Next →</button>
+    </div>
+    <div style="margin-top:20px;text-align:center">
+      <button class="btn btn-secondary" onclick="showSummary()">View Final Results 📊</button>
+      &nbsp;
+      <button class="btn btn-secondary" onclick="showWordlist()"> Vocabulary 📚</button>
+    </div>
+  </div>
+
+  <div id="summary">
+    <div class="summary-card">
+      <div class="summary-icon" id="summaryIcon">🎓</div>
+      <div class="summary-title">Practice Results</div>
+      <div class="summary-subtitle">GRE Verbal Reasoning Practice</div>
+      <div class="summary-score" id="summaryScore">0</div>
+      <div class="summary-denom" id="summaryDenom">0 Question </div>
+      <div class="summary-stats">
+        <div class="summary-stat s-correct">
+          <div class="summary-stat-val" id="sumCorrect">0</div>
+          <div class="summary-stat-lbl">Correct ✓</div>
+        </div>
+        <div class="summary-stat s-wrong">
+          <div class="summary-stat-val" id="sumWrong">0</div>
+          <div class="summary-stat-lbl">Wrong ✗</div>
+        </div>
+        <div class="summary-stat s-skip">
+          <div class="summary-stat-val" id="sumSkip">0</div>
+          <div class="summary-stat-lbl">Unanswered</div>
+        </div>
+      </div>
+      <div class="summary-breakdown">
+        <div class="breakdown-title">Performance by Section</div>
+        <div id="breakdownRows"></div>
+      </div>
+      <button class="btn btn-primary" onclick="showQuiz()" style="margin:0 auto"> Question </button>
+      &nbsp;
+      <button class="btn btn-secondary" onclick="resetAll()" style="margin:0 auto">Restart 🔄</button>
+    </div>
+  </div>
+
+  <div id="wordlist">
+    <div class="tab-row">
+      <button class="tab-btn active" onclick="showWordlist()"> Vocabulary</button>
+      <button class="tab-btn" onclick="showQuiz()"> Question</button>
+    </div>
+    <p class="section-label">Vocabulary GRE </p>
+    <div class="wordlist-grid" id="wordGrid"></div>
+  </div>
+</main>
+
+<script>
+// ══════════════════════════════════════════════════════
+//  100 GRE VERBAL QUESTIONS (Real GRE-style)
+// ══════════════════════════════════════════════════════
+const ALL_QUESTIONS = [
+// ── VOCABULARY (Q1-25) ──────────────────────────────
+{id:1,type:'Vocabulary',difficulty:2,
+ q:`The senator's speech was notable for its __________; she managed to convey complex policy positions in clear, accessible language.`,
+ choices:[{e:'perspicuity'},{e:'obfuscation'},{e:'grandiloquence'},{e:'verbosity'},{e:'reticence'}],
+ answer:0,
+ exp:`"Perspicuity" means clearness of expression or style. The clue "clear, accessible language" directly supports this answer. "Obfuscation" means deliberate obscurity — the opposite. "Grandiloquence" and "verbosity" both imply excess, not clarity.`,},
+
+{id:2,type:'Vocabulary',difficulty:2,
+ q:`The new manager's __________ style alienated the staff; her unwillingness to delegate any authority made employees feel micromanaged.`,
+ choices:[{e:'autocratic'},{e:'laissez-faire'},{e:'collegial'},{e:'diffident'},{e:'magnanimous'}],
+ answer:0,
+ exp:`"Autocratic" means having total power and not allowing others to make decisions. The context "unwilling to delegate any authority" perfectly describes an autocratic style. "Laissez-faire" is the opposite — a hands-off approach.`,},
+
+{id:3,type:'Vocabulary',difficulty:3,
+ q:`Despite years of acrimony between the two nations, the newly signed treaty suggested a genuine __________ in diplomatic relations.`,
+ choices:[{e:'rapprochement'},{e:'antipathy'},{e:'contention'},{e:'estrangement'},{e:'belligerence'}],
+ answer:0,
+ exp:`"Rapprochement" means the establishment of harmonious relations after a period of hostility. The contrast signal "despite" followed by "acrimony" points to a positive improvement — rapprochement.`,},
+
+{id:4,type:'Vocabulary',difficulty:2,
+ q:`The philanthropist's __________ gifts to the university over decades transformed it from a regional college into a world-class institution.`,
+ choices:[{e:'munificent'},{e:'parsimonious'},{e:'meager'},{e:'perfunctory'},{e:'capricious'}],
+ answer:0,
+ exp:`"Munificent" means very generous, especially with money or gifts. The context of a philanthropist transforming a college strongly supports generosity. "Parsimonious" (stingy) is the antonym.`,},
+
+{id:5,type:'Vocabulary',difficulty:3,
+ q:`The professor's lectures were celebrated for their __________, weaving together philosophy, history, and literature into a seamless whole.`,
+ choices:[{e:'eclecticism'},{e:'parochialism'},{e:'didacticism'},{e:'sophistry'},{e:'pedantry'}],
+ answer:0,
+ exp:`"Eclecticism" means deriving ideas from a broad and diverse range of sources. The clue "weaving together philosophy, history, and literature" directly describes an eclectic approach.`,},
+
+{id:6,type:'Vocabulary',difficulty:2,
+ q:`The critic's review was so __________ that even the author's staunchest supporters had to concede that some of the novel's flaws were real.`,
+ choices:[{e:'incisive'},{e:'sycophantic'},{e:'anodyne'},{e:'perfidious'},{e:'lachrymose'}],
+ answer:0,
+ exp:`"Incisive" means intelligently analytical and clear-thinking. An incisive critique would reveal real flaws, compelling even supporters to agree. "Anodyne" (harmless/bland) and "sycophantic" (flattering) are opposites.`,},
+
+{id:7,type:'Vocabulary',difficulty:3,
+ q:`The scientist's __________ approach to her research—leaving no variable unexamined, no data point unverified—set a new standard for rigor in the field.`,
+ choices:[{e:'assiduous'},{e:'desultory'},{e:'cavalier'},{e:'indolent'},{e:'haphazard'}],
+ answer:0,
+ exp:`"Assiduous" means showing great care, attention, and effort. Leaving no variable unexamined perfectly describes someone assiduous. "Desultory" (random), "cavalier" (unconcerned), and "indolent" (lazy) all contradict this.`,},
+
+{id:8,type:'Vocabulary',difficulty:2,
+ q:`His __________ on the subject of tax reform surprised observers; the politician was usually outspoken, but here he offered only vague, noncommittal remarks.`,
+ choices:[{e:'equivocation'},{e:'candor'},{e:'forthright­ness'},{e:'perspicacity'},{e:'garrulousness'}],
+ answer:0,
+ exp:`"Equivocation" means the use of ambiguous language to conceal the truth. "Vague, noncommittal remarks" by someone usually outspoken = equivocation. "Candor" and "forthrightness" are antonyms.`,},
+
+{id:9,type:'Vocabulary',difficulty:3,
+ q:`The judge rejected the evidence, ruling that the investigator's methods had been so __________ as to render any findings inadmissible.`,
+ choices:[{e:'tendentious'},{e:'scrupulous'},{e:'impartial'},{e:'fastidious'},{e:'dispassionate'}],
+ answer:0,
+ exp:`"Tendentious" means expressing a particular point of view; biased. Methods so tendentious that findings are inadmissible suggests improper bias during investigation. "Scrupulous" and "impartial" describe fair methods.`,},
+
+{id:10,type:'Vocabulary',difficulty:2,
+ q:`After the scandal, the once-revered CEO became a __________ figure in the industry, shunned by former allies and colleagues alike.`,
+ choices:[{e:'pariah'},{e:'luminary'},{e:'dilettante'},{e:'raconteur'},{e:'bon vivant'}],
+ answer:0,
+ exp:`"Pariah" means a person who is avoided or rejected by others. The context — shunned after a scandal — makes "pariah" the clear answer. "Luminary" (celebrated person) is the antonym.`,},
+
+{id:11,type:'Vocabulary',difficulty:3,
+ q:`The politician's claims, though delivered with theatrical __________, were ultimately hollow, lacking any concrete policy substance.`,
+ choices:[{e:'bombast'},{e:'understatement'},{e:'brevity'},{e:'diffidence'},{e:'cogency'}],
+ answer:0,
+ exp:`"Bombast" refers to high-sounding language with little meaning — theatrical but hollow. "Brevity" (conciseness) and "cogency" (logical force) are antonyms. "Understatement" is the opposite extreme.`,},
+
+{id:12,type:'Vocabulary',difficulty:2,
+ q:`The novel's __________ plot—jumping between five timelines and a dozen perspectives—confused many readers expecting a straightforward narrative.`,
+ choices:[{e:'labyrinthine'},{e:'linear'},{e:'pellucid'},{e:'facile'},{e:'prosaic'}],
+ answer:0,
+ exp:`"Labyrinthine" means like a labyrinth; intricate and complicated. Five timelines and twelve perspectives = labyrinthine. "Linear" and "pellucid" (clear) are opposites. "Facile" and "prosaic" both suggest simplicity.`,},
+
+{id:13,type:'Vocabulary',difficulty:3,
+ q:`Despite her __________, the young attorney's arguments were so compelling that the senior partners had no choice but to take notice.`,
+ choices:[{e:'callow­ness'},{e:'hubris'},{e:'sagacity'},{e:'aplomb'},{e:'perspicacity'}],
+ answer:0,
+ exp:`"Callowness" means lack of experience and maturity. "Despite her callowness" suggests she was young/inexperienced, yet effective. "Hubris" (arrogance), "sagacity," "aplomb," and "perspicacity" don't fit this contrast.`,},
+
+{id:14,type:'Vocabulary',difficulty:2,
+ q:`The documentary was criticized for its __________ portrayal of the conflict; it presented only one side and ignored the complexities entirely.`,
+ choices:[{e:'tendentious'},{e:'balanced'},{e:'nuanced'},{e:'objective'},{e:'disinterested'}],
+ answer:0,
+ exp:`"Tendentious" means promoting a particular cause or point of view; biased. Showing only one side = tendentious. "Balanced," "nuanced," "objective," and "disinterested" all describe fair portrayals.`,},
+
+{id:15,type:'Vocabulary',difficulty:3,
+ q:`The archaeologist's discovery was so __________ that it fundamentally altered our understanding of early human civilization.`,
+ choices:[{e:'seminal'},{e:'trivial'},{e:'ancillary'},{e:'ephemeral'},{e:'derivative'}],
+ answer:0,
+ exp:`"Seminal" means strongly influencing later developments; foundational. An archaeologist's discovery that "fundamentally altered understanding" is clearly seminal. "Trivial," "ancillary," and "ephemeral" all suggest minor importance.`,},
+
+{id:16,type:'Vocabulary',difficulty:2,
+ q:`The CEO's __________ dismissal of employee concerns led to widespread resentment and, ultimately, a damaging labor dispute.`,
+ choices:[{e:'peremptory'},{e:'judicious'},{e:'conciliatory'},{e:'magnanimous'},{e:'tentative'}],
+ answer:0,
+ exp:`"Peremptory" means insisting on immediate obedience; not allowing refusal or discussion. A dismissal that is peremptory would naturally cause resentment. "Conciliatory" and "magnanimous" describe a more positive approach.`,},
+
+{id:17,type:'Vocabulary',difficulty:3,
+ q:`The memoirist's prose is remarkably __________, each sentence polished until it achieves an almost crystalline clarity.`,
+ choices:[{e:'lapidary'},{e:'prolix'},{e:'turgid'},{e:'meandering'},{e:'verbose'}],
+ answer:0,
+ exp:`"Lapidary" means having the elegance and precision associated with inscriptions on stone; polished and concise. "Crystalline clarity" matches lapidary beautifully. "Prolix," "turgid," and "verbose" all suggest excess, the opposite.`,},
+
+{id:18,type:'Vocabulary',difficulty:2,
+ q:`Her __________ wit kept the audience entertained throughout the evening; her sharp observations were delivered with perfect comic timing.`,
+ choices:[{e:'mordant'},{e:'maudlin'},{e:'lugubrious'},{e:'truculent'},{e:'phlegmatic'}],
+ answer:0,
+ exp:`"Mordant" means having a sharp or critical quality; biting and critical, often used for humor. Sharp observations with comic timing = mordant wit. "Maudlin" and "lugubrious" describe sadness, not humor.`,},
+
+{id:19,type:'Vocabulary',difficulty:3,
+ q:`The philanthropist's __________ approach to charity—always acting from genuine concern rather than for recognition—won him deep respect.`,
+ choices:[{e:'altruistic'},{e:'mercenary'},{e:'ostentatious'},{e:'self-aggrandizing'},{e:'perfunctory'}],
+ answer:0,
+ exp:`"Altruistic" means showing selfless concern for others' well-being. Acting from "genuine concern rather than recognition" is the textbook definition of altruism. "Mercenary" and "ostentatious" describe self-serving motives.`,},
+
+{id:20,type:'Vocabulary',difficulty:2,
+ q:`The child's natural __________ was evident in her constant questioning: she wanted to know the why behind every single thing she encountered.`,
+ choices:[{e:'inquisitiveness'},{e:'apathy'},{e:'indolence'},{e:'complacency'},{e:'credulity'}],
+ answer:0,
+ exp:`"Inquisitiveness" means eager to learn or know. Constantly questioning "the why" is a perfect example of inquisitiveness. "Apathy" (lack of interest) and "indolence" (laziness) are the opposite.`,},
+
+{id:21,type:'Vocabulary',difficulty:3,
+ q:`The architect's design was praised for its __________, harmoniously blending modern aesthetics with the historic character of the surrounding neighborhood.`,
+ choices:[{e:'felicity'},{e:'incongruity'},{e:'garishness'},{e:'banality'},{e:'pedantry'}],
+ answer:0,
+ exp:`"Felicity" means the quality of being well-suited; aptness and pleasing expression. A design praised for harmoniously blending opposites exhibits felicity. "Incongruity" (inconsistency) is the antonym.`,},
+
+{id:22,type:'Vocabulary',difficulty:2,
+ q:`The company's __________ marketing campaign failed to connect with any demographic; it was so inoffensive and bland that it inspired no reaction whatsoever.`,
+ choices:[{e:'anodyne'},{e:'provocative'},{e:'incendiary'},{e:'acerbic'},{e:'ribald'}],
+ answer:0,
+ exp:`"Anodyne" means not likely to cause offense or disagreement; deliberately inoffensive and bland to the point of being ineffective. This perfectly matches "inoffensive and bland" in the question.`,},
+
+{id:23,type:'Vocabulary',difficulty:3,
+ q:`Scholars have long debated whether the poem's __________ imagery is intentional—a deliberate stylistic choice—or simply the product of careless composition.`,
+ choices:[{e:'overwrought'},{e:'spare'},{e:'limpid'},{e:'pellucid'},{e:'economical'}],
+ answer:0,
+ exp:`"Overwrought" means excessively elaborate or complicated, in a way that is not effective. If such imagery is debated as intentional vs. careless, it likely seems excessive — overwrought. "Spare," "limpid," and "pellucid" describe simplicity.`,},
+
+{id:24,type:'Vocabulary',difficulty:2,
+ q:`The scientist remained __________ in the face of overwhelming evidence to the contrary; no data could shake her conviction.`,
+ choices:[{e:'intransigent'},{e:'amenable'},{e:'vacillating'},{e:'pliable'},{e:'tractable'}],
+ answer:0,
+ exp:`"Intransigent" means refusing to change one's views or to agree. No data could shake her conviction = intransigent. "Amenable," "pliable," and "tractable" all describe willingness to change — antonyms here.`,},
+
+{id:25,type:'Vocabulary',difficulty:3,
+ q:`The general's strategy was criticized as __________ by historians: what appeared bold in the moment was, in retrospect, a reckless gamble with soldiers' lives.`,
+ choices:[{e:'hubristic'},{e:'prescient'},{e:'prudent'},{e:'sagacious'},{e:'circumspect'}],
+ answer:0,
+ exp:`"Hubristic" means excessively confident or arrogant, often leading to downfall. A strategy that seems bold but was actually a reckless gamble is hubristic. "Prescient" (foresighted), "prudent," and "sagacious" describe wise decision-making.`,},
+
+// ── SENTENCE EQUIVALENCE (Q26-50) ──────────────────
+{id:26,type:'Sentence Equivalence',difficulty:2,
+ q:`The negotiator's skill at finding __________ between the two parties' seemingly irreconcilable demands earned her widespread acclaim.`,
+ choices:[{e:'common ground'},{e:'discord'},{e:'compromise'},{e:'contention'},{e:'impasse'}],
+ answer:0,
+ exp:`A skilled negotiator who earns acclaim finds positive outcomes. "Common ground" perfectly fits—finding shared positions between irreconcilable demands. "Compromise" also works but "common ground" is more precise for a negotiator's skill.`,},
+
+{id:27,type:'Sentence Equivalence',difficulty:2,
+ q:`Though initially __________  about the new software, the IT team eventually recognized its efficiency gains and became strong advocates.`,
+ choices:[{e:'skeptical'},{e:'enthusiastic'},{e:'dubious'},{e:'sanguine'},{e:'zealous'}],
+ answer:0,
+ exp:`"Though initially" signals a contrast — the team changed their view. Starting skeptical/dubious and then becoming advocates is a logical change. "Skeptical" and "dubious" are synonymous and both fit. "Enthusiastic" wouldn't create a contrast.`,},
+
+{id:28,type:'Sentence Equivalence',difficulty:3,
+ q:`The philosopher argued that true wisdom requires a certain __________ — an acceptance that one's knowledge is always incomplete and provisional.`,
+ choices:[{e:'epistemic humility'},{e:'intellectual arrogance'},{e:'circumspection'},{e:'diffidence'},{e:'credulity'}],
+ answer:0,
+ exp:`The definition "acceptance that one's knowledge is always incomplete" is precisely the definition of epistemic humility. "Intellectual arrogance" is the opposite. "Diffidence" (lack of confidence) is too personal, not philosophical.`,},
+
+{id:29,type:'Sentence Equivalence',difficulty:2,
+ q:`The government's __________ response to the humanitarian crisis drew international condemnation; weeks passed before any meaningful aid arrived.`,
+ choices:[{e:'dilatory'},{e:'expeditious'},{e:'prompt'},{e:'decisive'},{e:'zealous'}],
+ answer:0,
+ exp:`"Dilatory" means slow to act; causing delay. Weeks passing before aid arrives = dilatory. "Expeditious," "prompt," and "decisive" all describe fast, effective responses — the opposite of what drew condemnation.`,},
+
+{id:30,type:'Sentence Equivalence',difficulty:3,
+ q:`The author's portrayal of the protagonist is refreshingly __________, avoiding the simplistic hero/villain dichotomy common in popular fiction.`,
+ choices:[{e:'nuanced'},{e:'one-dimensional'},{e:'ambiguous'},{e:'tendentious'},{e:'stereotypical'}],
+ answer:0,
+ exp:`"Nuanced" means having subtle distinctions; not simplistic. Avoiding hero/villain dichotomy = nuanced portrayal. "One-dimensional" and "stereotypical" are the opposite. "Ambiguous" implies confusion rather than complexity.`,},
+
+{id:31,type:'Sentence Equivalence',difficulty:2,
+ q:`The veteran journalist was known for her __________ probing; she refused to accept evasive answers and invariably pressed for specifics.`,
+ choices:[{e:'tenacious'},{e:'desultory'},{e:'perfunctory'},{e:'lax'},{e:'cursory'}],
+ answer:0,
+ exp:`"Tenacious" means holding firmly to a purpose; persistent. A journalist who "refuses evasive answers and presses for specifics" is tenacious. "Desultory," "perfunctory," "lax," and "cursory" all describe lack of thoroughness.`,},
+
+{id:32,type:'Sentence Equivalence',difficulty:3,
+ q:`Far from being __________, the new regulations were welcomed by most industry insiders, who recognized that clearer standards would benefit everyone.`,
+ choices:[{e:'onerous'},{e:'salutary'},{e:'beneficial'},{e:'propitious'},{e:'burdensome'}],
+ answer:0,
+ exp:`"Far from being [negative]" signals the blank must be negative. The regulations were welcomed, so "onerous" or "burdensome" (both meaning excessively heavy/demanding) make sense for what they were NOT. "Onerous" is most precise here.`,},
+
+{id:33,type:'Sentence Equivalence',difficulty:2,
+ q:`Her ability to remain __________ under pressure set her apart from colleagues who became visibly flustered during difficult negotiations.`,
+ choices:[{e:'imperturbable'},{e:'volatile'},{e:'mercurial'},{e:'choleric'},{e:'irascible'}],
+ answer:0,
+ exp:`"Imperturbable" means unable to be upset or excited; calm. Remaining composed while colleagues get flustered = imperturbable. "Volatile," "mercurial," "choleric," and "irascible" all describe people who are easily agitated.`,},
+
+{id:34,type:'Sentence Equivalence',difficulty:3,
+ q:`The theory, once considered __________, has been rehabilitated by recent empirical work showing it has more explanatory power than previously thought.`,
+ choices:[{e:'discredited'},{e:'nascent'},{e:'canonical'},{e:'prevalent'},{e:'dominant'}],
+ answer:0,
+ exp:`If a theory has been "rehabilitated," it was previously rejected. "Discredited" (having lost credibility) is the right answer. "Nascent" (emerging), "canonical," "prevalent," and "dominant" all suggest positive or neutral standing.`,},
+
+{id:35,type:'Sentence Equivalence',difficulty:2,
+ q:`The board found the CEO's explanation for the financial irregularities __________, and voted to conduct a full independent audit.`,
+ choices:[{e:'unconvincing'},{e:'compelling'},{e:'credible'},{e:'cogent'},{e:'plausible'}],
+ answer:0,
+ exp:`Voting to conduct a full audit suggests the board was NOT satisfied with the explanation. "Unconvincing" (failing to persuade) fits. "Compelling," "credible," "cogent," and "plausible" all describe an explanation the board would accept.`,},
+
+{id:36,type:'Sentence Equivalence',difficulty:3,
+ q:`The pianist's performance was technically __________, yet curiously cold; precision alone, it seemed, could not substitute for genuine emotional engagement.`,
+ choices:[{e:'impeccable'},{e:'mediocre'},{e:'flawed'},{e:'perfunctory'},{e:'erratic'}],
+ answer:0,
+ exp:`The sentence says the performance was technically high-quality but emotionally cold. "Impeccable" (without flaw) fits the technical brilliance. "Mediocre," "flawed," and "erratic" suggest poor quality. "Perfunctory" means done without care — contradicts technical precision.`,},
+
+{id:37,type:'Sentence Equivalence',difficulty:2,
+ q:`The new evidence proved so __________ to the prosecution's case that the defense attorney immediately moved for a mistrial.`,
+ choices:[{e:'damning'},{e:'exculpatory'},{e:'corroborating'},{e:'incriminating'},{e:'supportive'}],
+ answer:1,
+ exp:`The defense attorney moved for a mistrial — this is a defense tactic when something benefits the defendant. "Exculpatory" (clearing the accused) would benefit the defense and damage the prosecution. "Damning" and "incriminating" would help prosecution, not defense.`,},
+
+{id:38,type:'Sentence Equivalence',difficulty:3,
+ q:`Critics accused the biographer of __________ in her portrayal of the statesman, arguing that she glossed over serious moral failures.`,
+ choices:[{e:'hagiography'},{e:'vilification'},{e:'objectivity'},{e:'rigorous analysis'},{e:'iconoclasm'}],
+ answer:0,
+ exp:`"Hagiography" literally means biography of a saint; it refers to a biography that treats its subject uncritically and in an overly admiring way. Glossing over serious moral failures = hagiography. "Vilification" is the opposite extreme.`,},
+
+{id:39,type:'Sentence Equivalence',difficulty:2,
+ q:`The architect's plans were ultimately rejected as __________ — the projected costs exceeded the entire annual budget of the municipal government.`,
+ choices:[{e:'fiscally imprudent'},{e:'cost-effective'},{e:'economical'},{e:'frugal'},{e:'judicious'}],
+ answer:0,
+ exp:`Costs exceeding the entire annual budget = fiscally imprudent (financially unwise/reckless). "Cost-effective," "economical," and "frugal" all describe efficient use of money — the opposite of this situation.`,},
+
+{id:40,type:'Sentence Equivalence',difficulty:3,
+ q:`The poet's late work is characterized by a remarkable __________, each image and metaphor carefully chosen to achieve maximum effect with minimum words.`,
+ choices:[{e:'economy'},{e:'prolixity'},{e:'verbosity'},{e:'garrulousness'},{e:'redundancy'}],
+ answer:0,
+ exp:`"Economy" in writing means using few words for maximum effect — exactly what "maximum effect with minimum words" describes. "Prolixity," "verbosity," and "garrulousness" all describe excessive wordiness — the opposite.`,},
+
+{id:41,type:'Sentence Equivalence',difficulty:2,
+ q:`The study's methodology was criticized as __________; the sample size of twelve participants could not possibly support conclusions about a population of millions.`,
+ choices:[{e:'deeply flawed'},{e:'rigorous'},{e:'methodical'},{e:'comprehensive'},{e:'sound'}],
+ answer:0,
+ exp:`A sample of 12 to draw conclusions about millions is clearly inadequate. "Deeply flawed" captures this problem. "Rigorous," "methodical," "comprehensive," and "sound" all describe good methodology — the opposite.`,},
+
+{id:42,type:'Sentence Equivalence',difficulty:3,
+ q:`His argument, though superficially __________, fell apart under scrutiny; the reasoning contained several subtle logical fallacies.`,
+ choices:[{e:'plausible'},{e:'absurd'},{e:'incoherent'},{e:'specious'},{e:'fatuous'}],
+ answer:3,
+ exp:`"Specious" means superficially plausible but actually wrong — perfectly matching "superficially [convincing] but fell apart under scrutiny." While "plausible" fits the surface appearance, "specious" captures both the surface and the hidden flaw simultaneously.`,},
+
+{id:43,type:'Sentence Equivalence',difficulty:2,
+ q:`The charity's finances were so well-documented that even the most __________ donor could review the complete audit trail of every expenditure.`,
+ choices:[{e:'exacting'},{e:'complacent'},{e:'credulous'},{e:'indifferent'},{e:'negligent'}],
+ answer:0,
+ exp:`"Exacting" means demanding high standards. Even the most demanding donor could be satisfied = exacting. "Complacent," "credulous," and "indifferent" describe donors who would NOT scrutinize carefully — making "exacting" the most challenging standard.`,},
+
+{id:44,type:'Sentence Equivalence',difficulty:3,
+ q:`The historian's celebrated monograph has proven remarkably __________, its central argument sparking productive scholarly debate for three decades.`,
+ choices:[{e:'generative'},{e:'derivative'},{e:'ephemeral'},{e:'trivial'},{e:'inconsequential'}],
+ answer:0,
+ exp:`"Generative" means producing new ideas or growth. A work that sparks productive debate for thirty years is clearly generative. "Derivative" (unoriginal), "ephemeral" (short-lived), and "trivial" are all negative — contradicting "celebrated."`,},
+
+{id:45,type:'Sentence Equivalence',difficulty:2,
+ q:`The president's veto of the popular legislation was seen as politically __________, likely to cost him significant support in the upcoming election.`,
+ choices:[{e:'injudicious'},{e:'astute'},{e:'shrewd'},{e:'prudent'},{e:'strategic'}],
+ answer:0,
+ exp:`An action that will cost the president votes in an upcoming election is politically unwise. "Injudicious" (unwise; lacking good judgment) fits. "Astute," "shrewd," and "prudent" all describe good political judgment — the opposite.`,},
+
+{id:46,type:'Sentence Equivalence',difficulty:3,
+ q:`Professor Chen's classroom was marked by a __________ atmosphere; students felt free to challenge established theories and propose unconventional ideas.`,
+ choices:[{e:'intellectually permissive'},{e:'authoritarian'},{e:'doctrinaire'},{e:'repressive'},{e:'conformist'}],
+ answer:0,
+ exp:`A classroom where students challenge theories and propose unconventional ideas freely = "intellectually permissive" (open to diverse thought). "Authoritarian," "doctrinaire," "repressive," and "conformist" all describe environments that restrict free thinking.`,},
+
+{id:47,type:'Sentence Equivalence',difficulty:2,
+ q:`What makes the artist's work so compelling is its __________ — the work seems to grow richer and more complex the more closely one examines it.`,
+ choices:[{e:'inexhaustibility'},{e:'superficiality'},{e:'simplicity'},{e:'banality'},{e:'monotony'}],
+ answer:0,
+ exp:`"Inexhaustibility" means the quality of being limitless or unable to be used up. Work that "grows richer the more you examine it" has this quality. "Superficiality," "simplicity," and "banality" all suggest limited depth — opposite of this.`,},
+
+{id:48,type:'Sentence Equivalence',difficulty:3,
+ q:`The company's __________ in acquiring smaller competitors has drawn antitrust scrutiny, with regulators concerned about monopolistic practices.`,
+ choices:[{e:'aggressiveness'},{e:'reticence'},{e:'timidity'},{e:'restraint'},{e:'passivity'}],
+ answer:0,
+ exp:`Antitrust scrutiny and concern about monopolistic practices result from aggressive acquisition. "Aggressiveness" fits. "Reticence," "timidity," "restraint," and "passivity" all describe holding back — the opposite of aggressive acquisition.`,},
+
+{id:49,type:'Sentence Equivalence',difficulty:2,
+ q:`The documentary's __________ score—swooping orchestral movements at every dramatic moment—felt manipulative rather than genuinely moving.`,
+ choices:[{e:'mawkish'},{e:'understated'},{e:'restrained'},{e:'subtle'},{e:'spare'}],
+ answer:0,
+ exp:`"Mawkish" means sentimental in an exaggerated or false way. Orchestral swoops at every dramatic moment = manipulative and mawkish. "Understated," "restrained," "subtle," and "spare" all describe the opposite: holding back emotion.`,},
+
+{id:50,type:'Sentence Equivalence',difficulty:3,
+ q:`The scientist's results, while __________, raised tantalizing questions that her successors would spend decades attempting to answer.`,
+ choices:[{e:'inconclusive'},{e:'definitive'},{e:'exhaustive'},{e:'irrefutable'},{e:'unambiguous'}],
+ answer:0,
+ exp:`Results that "raise questions" to be answered for decades are not conclusive. "Inconclusive" (not leading to a clear conclusion) fits the gap. "Definitive," "exhaustive," and "irrefutable" all describe settled, certain findings.`,},
+
+// ── TEXT COMPLETION (Q51-75) ───────────────────────
+{id:51,type:'Text Completion',difficulty:2,
+ q:`Although the professor's lectures were occasionally (i)__________, the students tolerated them because his insights into the field were utterly (ii)__________.`,
+ choices:[{e:'(A) pedantic / (B) invaluable'},{e:'(A) inspiring / (B) trite'},{e:'(A) succinct / (B) mediocre'},{e:'(A) dynamic / (B) commonplace'},{e:'(A) rigorous / (B) repetitive'}],
+ answer:0,
+ exp:`The structure is "although [negative], students tolerated [because positive]." Blank (i) should be negative (pedantic = dry/boring), and blank (ii) should be highly positive (invaluable = priceless). This creates the correct "although...because" contrast.`,},
+
+{id:52,type:'Text Completion',difficulty:2,
+ q:`The new study __________ the long-held assumption that vitamin C supplements significantly reduce cold duration; the data showed no meaningful difference.`,
+ choices:[{e:'undermined'},{e:'corroborated'},{e:'validated'},{e:'reinforced'},{e:'substantiated'}],
+ answer:0,
+ exp:`"No meaningful difference" means the supplement doesn't work as assumed. This data would undermine (weaken/damage) the assumption. "Corroborated," "validated," "reinforced," and "substantiated" all mean supporting — the opposite.`,},
+
+{id:53,type:'Text Completion',difficulty:3,
+ q:`Paradoxically, the novelist's most celebrated works were composed during periods of extreme personal (i)__________, suggesting that creative output and personal wellbeing are not always (ii)__________.`,
+ choices:[{e:'(A) adversity / (B) correlated'},{e:'(A) prosperity / (B) independent'},{e:'(A) languor / (B) compatible'},{e:'(A) contentment / (B) antagonistic'},{e:'(A) stability / (B) linked'}],
+ answer:0,
+ exp:`"Paradoxically" + "most celebrated works during extreme personal [trouble]" suggests adversity (hardship). If great art comes from hardship, wellbeing and creativity are NOT always correlated (linked). Answer A makes both blanks sensible.`,},
+
+{id:54,type:'Text Completion',difficulty:2,
+ q:`The documentary filmmaker was known for her __________ approach: she spent years embedded with her subjects before filming a single frame.`,
+ choices:[{e:'immersive'},{e:'cursory'},{e:'detached'},{e:'superficial'},{e:'expedient'}],
+ answer:0,
+ exp:`Spending years embedded with subjects before filming = deeply engaged, immersive. "Cursory," "detached," and "superficial" all describe minimal engagement — the opposite of years of embedding.`,},
+
+{id:55,type:'Text Completion',difficulty:3,
+ q:`The committee's __________ surprised many observers; given the fierce opposition they had faced, few expected such a swift and definitive resolution.`,
+ choices:[{e:'decisiveness'},{e:'vacillation'},{e:'irresolution'},{e:'procrastination'},{e:'circumspection'}],
+ answer:0,
+ exp:`Observers were surprised by a "swift and definitive resolution" despite fierce opposition. This quality is decisiveness. "Vacillation," "irresolution," and "procrastination" all describe failure to decide — the opposite.`,},
+
+{id:56,type:'Text Completion',difficulty:2,
+ q:`The poet's early work was characterized by (i)__________ imagery, but her mature writing showed a remarkable (ii)__________, each word chosen with surgical precision.`,
+ choices:[{e:'(A) exuberant / (B) economy'},{e:'(A) sparse / (B) verbosity'},{e:'(A) precise / (B) excess'},{e:'(A) disciplined / (B) abandon'},{e:'(A) understated / (B) elaborateness'}],
+ answer:0,
+ exp:`The contrast "early → mature" signals change. Exuberant (abundant/enthusiastic) early imagery contrasting with economical (precise, minimal) mature writing is a classic literary development. "Surgical precision" confirms economy of expression.`,},
+
+{id:57,type:'Text Completion',difficulty:3,
+ q:`Her reputation as a __________ thinker was well-earned; she never accepted any claim without first examining its underlying assumptions and considering alternative interpretations.`,
+ choices:[{e:'critical'},{e:'credulous'},{e:'dogmatic'},{e:'credulous'},{e:'complacent'}],
+ answer:0,
+ exp:`Examining assumptions and considering alternatives before accepting claims = critical thinking. "Credulous" (gullible), "dogmatic" (rigid), and "complacent" (self-satisfied) all describe failure to think critically.`,},
+
+{id:58,type:'Text Completion',difficulty:2,
+ q:`The merger, initially hailed as a strategic masterstroke, proved __________ in practice, as the two companies' cultures proved fundamentally incompatible.`,
+ choices:[{e:'disastrous'},{e:'visionary'},{e:'prescient'},{e:'synergistic'},{e:'lucrative'}],
+ answer:0,
+ exp:`"Initially hailed" → "proved [negative] in practice" is a classic contrast pattern. Fundamentally incompatible cultures = failed merger = disastrous. "Visionary," "synergistic," and "lucrative" would mean the merger succeeded.`,},
+
+{id:59,type:'Text Completion',difficulty:3,
+ q:`The senator's __________ on immigration policy was widely perceived as a political calculation rather than a principled evolution of her views.`,
+ choices:[{e:'volte-face'},{e:'consistency'},{e:'intransigence'},{e:'candor'},{e:'steadfastness'}],
+ answer:0,
+ exp:`"Political calculation rather than principled evolution" suggests a sudden, opportunistic change in position. "Volte-face" means a complete reversal of opinion. "Consistency," "intransigence," and "steadfastness" all describe not changing position.`,},
+
+{id:60,type:'Text Completion',difficulty:2,
+ q:`The new teacher's __________ grading policies—her comments ran to three or four pages even for short assignments—were both impressive and exhausting for students.`,
+ choices:[{e:'exhaustive'},{e:'cursory'},{e:'lenient'},{e:'lax'},{e:'haphazard'}],
+ answer:0,
+ exp:`Three to four pages of comments even for short assignments = extremely thorough, exhaustive. "Cursory" (quick and shallow), "lenient," and "lax" all describe the opposite of this level of thoroughness.`,},
+
+{id:61,type:'Text Completion',difficulty:3,
+ q:`The ethicist argued that technological progress is inherently (i)__________ — it neither automatically improves nor degrades the human condition, but instead creates new (ii)__________ that require fresh ethical frameworks.`,
+ choices:[{e:'(A) morally neutral / (B) dilemmas'},{e:'(A) inherently beneficial / (B) opportunities'},{e:'(A) fundamentally destructive / (B) crises'},{e:'(A) politically charged / (B) controversies'},{e:'(A) economically determined / (B) incentives'}],
+ answer:0,
+ exp:`"Neither automatically improves nor degrades" = moral neutrality. Technology that is morally neutral creates ethical dilemmas that need new frameworks. Blank (i) = morally neutral; Blank (ii) = dilemmas. This is internally consistent.`,},
+
+{id:62,type:'Text Completion',difficulty:2,
+ q:`Though the CEO was __________ in private, in public she projected an image of confidence and authority that inspired great loyalty among employees.`,
+ choices:[{e:'diffident'},{e:'imperious'},{e:'authoritative'},{e:'decisive'},{e:'assertive'}],
+ answer:0,
+ exp:`The contrast "though in private [X], in public projected confidence" requires a negative contrast. "Diffident" (lacking self-confidence) contrasts beautifully with "confidence and authority" in public. "Imperious" and "authoritative" match the public image, not the private contrast.`,},
+
+{id:63,type:'Text Completion',difficulty:3,
+ q:`The trial's outcome hinged on whether the jury could parse the __________ legal distinctions the defense had drawn between negligence and recklessness.`,
+ choices:[{e:'abstruse'},{e:'obvious'},{e:'elementary'},{e:'lucid'},{e:'self-evident'}],
+ answer:0,
+ exp:`Distinctions that are hard for a jury to parse are complicated. "Abstruse" means difficult to understand; obscure. "Obvious," "elementary," "lucid," and "self-evident" all describe distinctions that would be easy to grasp.`,},
+
+{id:64,type:'Text Completion',difficulty:2,
+ q:`The town's transformation from a __________ mining community into a thriving arts center took less than a generation.`,
+ choices:[{e:'moribund'},{e:'vibrant'},{e:'prosperous'},{e:'flourishing'},{e:'thriving'}],
+ answer:0,
+ exp:`"Transformation into a thriving arts center" implies the town was previously declining. "Moribund" (dying; no longer effective or growing) contrasts perfectly with "thriving." "Vibrant," "prosperous," and "flourishing" would remove any contrast.`,},
+
+{id:65,type:'Text Completion',difficulty:3,
+ q:`The philosopher maintained that all knowledge claims must be held (i)__________, subject to revision in light of new evidence — a position that placed him firmly within the (ii)__________ tradition.`,
+ choices:[{e:'(A) provisionally / (B) fallibilist'},{e:'(A) dogmatically / (B) rationalist'},{e:'(A) absolutely / (B) empiricist'},{e:'(A) tentatively / (B) nihilist'},{e:'(A) confidently / (B) positivist'}],
+ answer:0,
+ exp:`"Subject to revision in light of new evidence" = held provisionally (temporarily, not permanently). This view — that all beliefs can be wrong — is fallibilism. "Dogmatically" and "absolutely" contradict revision. "Nihilism" denies all knowledge.`,},
+
+{id:66,type:'Text Completion',difficulty:2,
+ q:`Far from being intimidated by the complexity of the problem, the young engineer seemed positively __________ by it, working late into the night with evident enthusiasm.`,
+ choices:[{e:'energized'},{e:'daunted'},{e:'deterred'},{e:'discouraged'},{e:'overwhelmed'}],
+ answer:0,
+ exp:`"Far from being intimidated" and "evident enthusiasm" both signal a positive reaction. "Energized" (made vigorous and vital) fits perfectly. "Daunted," "deterred," "discouraged," and "overwhelmed" all describe negative reactions to difficulty.`,},
+
+{id:67,type:'Text Completion',difficulty:3,
+ q:`The gallery's curatorial decision to hang work by emerging artists alongside canonical masters was seen as either __________ or brilliant, depending entirely on one's aesthetic sensibilities.`,
+ choices:[{e:'hubristic'},{e:'modest'},{e:'reverential'},{e:'conventional'},{e:'orthodox'}],
+ answer:0,
+ exp:`Placing emerging artists alongside canonical masters is a bold move that could be seen as arrogant — as if elevating unknown artists to the level of masters. "Hubristic" (excessively confident/arrogant) fits. "Modest" and "conventional" would not provoke controversy.`,},
+
+{id:68,type:'Text Completion',difficulty:2,
+ q:`Her thesis advisor noted that while her research was meticulous, her conclusions sometimes outpaced her evidence, leading to claims that were __________ at best.`,
+ choices:[{e:'speculative'},{e:'irrefutable'},{e:'conclusive'},{e:'watertight'},{e:'empirically grounded'}],
+ answer:0,
+ exp:`Claims that outpace evidence are not yet proven — they are speculative (based on conjecture rather than established fact). "Irrefutable," "conclusive," and "watertight" all describe very well-supported claims — the opposite.`,},
+
+{id:69,type:'Text Completion',difficulty:3,
+ q:`The regime's propaganda portrayed the resistance as __________ agitators with no legitimate grievances, a characterization designed to strip them of public sympathy.`,
+ choices:[{e:'seditious'},{e:'principled'},{e:'righteous'},{e:'noble'},{e:'conscientious'}],
+ answer:0,
+ exp:`Propaganda portraying resisters as having no legitimate grievances would label them criminals or troublemakers. "Seditious" (inciting rebellion against authority) is exactly the label a regime would apply. "Principled," "righteous," and "noble" would generate sympathy.`,},
+
+{id:70,type:'Text Completion',difficulty:2,
+ q:`The novelist's decision to write the entire book in second person was considered __________ by some reviewers, who felt it created unnecessary distance from the narrative.`,
+ choices:[{e:'gimmicky'},{e:'innovative'},{e:'masterful'},{e:'seamless'},{e:'felicitous'}],
+ answer:0,
+ exp:`Critics who feel a technique creates "unnecessary distance" view it negatively — as a trick rather than a meaningful choice. "Gimmicky" (an attention-seeking device) captures this criticism. "Innovative," "masterful," and "felicitous" would be positive assessments.`,},
+
+{id:71,type:'Text Completion',difficulty:3,
+ q:`The company's (i)__________ approach to intellectual property protection—filing thousands of patents on even minor incremental improvements—has been condemned as (ii)__________ that stifles rather than promotes innovation.`,
+ choices:[{e:'(A) aggressive / (B) patent thicketing'},{e:'(A) passive / (B) innovation'},{e:'(A) transparent / (B) good practice'},{e:'(A) minimal / (B) a model'},{e:'(A) selective / (B) diligence'}],
+ answer:0,
+ exp:`Filing thousands of patents on minor improvements = aggressive IP strategy. This practice is condemned as "patent thicketing" — creating a thicket of overlapping patents that blocks competitors. This specific GRE-level term makes Answer A the clear choice.`,},
+
+{id:72,type:'Text Completion',difficulty:2,
+ q:`Although the documentary was praised for its visual beauty, many critics found its political analysis __________, relying on simplistic binaries rather than nuanced examination.`,
+ choices:[{e:'reductive'},{e:'sophisticated'},{e:'penetrating'},{e:'incisive'},{e:'illuminating'}],
+ answer:0,
+ exp:`"Simplistic binaries rather than nuanced examination" = oversimplifying complex issues. "Reductive" (presenting something in a simplified way that loses important nuance) is the perfect answer. "Sophisticated," "penetrating," and "incisive" describe excellent analysis.`,},
+
+{id:73,type:'Text Completion',difficulty:3,
+ q:`The historian's __________ interpretation of the treaty has sparked considerable debate; she argues that what others read as diplomatic success was actually a profound strategic defeat.`,
+ choices:[{e:'revisionist'},{e:'conventional'},{e:'orthodox'},{e:'mainstream'},{e:'consensus'}],
+ answer:0,
+ exp:`A "revisionist" interpretation challenges the established view. Reading a diplomatic success as "actually a profound strategic defeat" is exactly what revisionist history does. "Conventional," "orthodox," and "mainstream" describe accepted views.`,},
+
+{id:74,type:'Text Completion',difficulty:2,
+ q:`The book was praised for its __________ approach to a difficult topic: the author managed to discuss trauma without either sensationalizing or minimizing its impact.`,
+ choices:[{e:'measured'},{e:'sensational'},{e:'dismissive'},{e:'alarmist'},{e:'hyperbolic'}],
+ answer:0,
+ exp:`"Without either sensationalizing or minimizing" = balanced, measured treatment. "Measured" means careful and restrained. "Sensational," "alarmist," and "hyperbolic" all describe excess in one direction.`,},
+
+{id:75,type:'Text Completion',difficulty:3,
+ q:`The social scientist cautioned against __________ in interpreting cross-cultural data; practices that appear irrational in one cultural context may serve important social functions in another.`,
+ choices:[{e:'ethnocentrism'},{e:'cultural relativism'},{e:'contextualism'},{e:'empiricism'},{e:'pragmatism'}],
+ answer:0,
+ exp:`"Judging other cultures' practices as irrational based on one's own cultural framework" is the definition of ethnocentrism. The caution that practices serve functions in their own context is a warning against ethnocentric judgment. "Cultural relativism" is actually the recommended approach.`,},
+
+// ── READING COMPREHENSION (Q76-90) ─────────────────
+{id:76,type:'Reading Comprehension',difficulty:2,
+ q:`[Passage] Recent studies have challenged the "Mozart Effect"—the claim that listening to Mozart temporarily boosts spatial reasoning. The original 1993 study showed a modest, short-lived improvement. However, subsequent research found the effect unreliable: it appeared in some studies but not others, and meta-analyses suggested any benefits were marginal at best. Proponents now argue that the original claim was oversimplified and that the real benefit may be motivational—engaged listening improves focus broadly, regardless of composer.\n\nThe passage's primary purpose is to:`,
+ choices:[{e:'To definitively disprove the Mozart Effect'},{e:'To trace the evolution of a scientific claim and its limitations'},{e:'To argue that classical music has no effect on cognition'},{e:'To recommend listening to Mozart for academic performance'},{e:'To compare Mozart with other composers on cognitive effects'}],
+ answer:1,
+ exp:`The passage describes the original claim (1993), subsequent challenge (meta-analyses), and a revised explanation (motivational). This is tracing how the scientific understanding evolved, not definitively disproving it (A) or recommending it (D).`,},
+
+{id:77,type:'Reading Comprehension',difficulty:3,
+ q:`[Passage] "Regulatory capture" occurs when a regulatory agency, created to act in the public interest, instead advances the commercial interests of the industry it is supposed to regulate. This phenomenon can arise through several mechanisms: the "revolving door" (movement of individuals between regulator and regulated), information asymmetry (the regulated industry often knows more than the regulator), and the diffuse nature of public benefits versus concentrated industry losses from strict regulation.\n\nAccording to the passage, which of the following best explains why regulatory capture is difficult to prevent?`,
+ choices:[{e:'Regulators are often dishonest individuals'},{e:'Structural factors like information asymmetry and career incentives create systematic vulnerabilities'},{e:'Regulatory agencies lack sufficient funding'},{e:'Industries always lobby more effectively than public interest groups'},{e:'Regulatory capture is an inevitable consequence of democracy'}],
+ answer:1,
+ exp:`The passage identifies three structural mechanisms: revolving door (career incentives), information asymmetry, and diffuse vs. concentrated interests. Answer B captures these structural factors correctly. A (dishonesty) and C (funding) are not mentioned.`,},
+
+{id:78,type:'Reading Comprehension',difficulty:2,
+ q:`[Passage] The placebo effect—improvement in patient outcomes due to belief in treatment rather than the treatment itself—has long been dismissed as "mere" psychology. However, neuroimaging studies now show that placebo treatments trigger measurable neurochemical changes, including the release of endogenous opioids. This suggests the effect is not "imaginary" but involves genuine physiological mechanisms, raising important questions about the boundary between mind and body in medicine.\n\nThe author's attitude toward the placebo effect can best be described as:`,
+ choices:[{e:'Skeptical — the author doubts its existence'},{e:'Enthusiastically endorsing — the author wants it used in all treatments'},{e:'Analytically respectful — the author takes it seriously as a genuine physiological phenomenon'},{e:'Dismissive — the author agrees it is "mere" psychology'},{e:'Alarmist — the author fears its ethical implications'}],
+ answer:2,
+ exp:`The author presents neuroimaging evidence that the placebo effect has real physiological basis and calls for examining the "boundary between mind and body." This is analytical respect — taking it seriously as a real phenomenon, not dismissing or over-endorsing it.`,},
+
+{id:79,type:'Reading Comprehension',difficulty:3,
+ q:`[Passage] Early industrialization in Britain proceeded without significant state intervention, creating what historians call "spontaneous order" in factory organization. Workers, entrepreneurs, and local communities improvised solutions to novel problems without central planning. Revisionists argue, however, that this narrative obscures substantial early legal and political scaffolding — enclosure acts, poor laws, and contract enforcement — that provided essential preconditions for this apparently spontaneous development.\n\nThe revisionist argument is primarily aimed at:`,
+ choices:[{e:'Praising government intervention in economic affairs'},{e:'Challenging the claim that industrialization was truly spontaneous by revealing its hidden prerequisites'},{e:'Arguing that industrialization was a failure without state support'},{e:'Showing that workers had no agency in early industrialization'},{e:'Recommending current economic policy based on historical lessons'}],
+ answer:1,
+ exp:`Revisionists argue that the "spontaneous order" narrative obscures prior legal scaffolding (enclosure acts, poor laws, contract enforcement). They challenge the "spontaneous" label by showing it rested on hidden prerequisites — Answer B.`,},
+
+{id:80,type:'Reading Comprehension',difficulty:2,
+ q:`[Passage] Coral reefs cover less than 1% of the ocean floor but support approximately 25% of all marine species. Rising ocean temperatures bleach coral — the coral expels its symbiotic algae under heat stress, losing both color and its primary energy source. Repeated bleaching events weaken and eventually kill coral. Since 2016, the Great Barrier Reef has experienced four mass bleaching events. Scientists warn that without significant reductions in carbon emissions, most tropical reefs will be functionally extinct by 2050.\n\nWhich of the following can be directly inferred from the passage?`,
+ choices:[{e:'Coral reefs will definitely be extinct by 2050'},{e:'The Great Barrier Reef has fully recovered from its bleaching events'},{e:'The loss of coral reefs would threaten a disproportionately large share of marine biodiversity'},{e:'Coral bleaching is caused by pollution rather than temperature'},{e:'All coral reefs will experience bleaching by 2025'}],
+ answer:2,
+ exp:`Less than 1% of ocean floor supports 25% of marine species. If reefs are lost, 25% of species are threatened — that is disproportionate. Answer A says "definitely" but the passage says scientists "warn" — a conditional. B and D contradict the passage.`,},
+
+{id:81,type:'Reading Comprehension',difficulty:3,
+ q:`[Passage] The concept of "nudge" theory, developed by Thaler and Sunstein, holds that small changes in how choices are presented (the "choice architecture") can predictably alter behavior without restricting options or changing economic incentives. For example, making healthy foods more visible in cafeterias increases their selection. Critics argue that nudges are paternalistic — they manipulate behavior without the subject's full awareness. Proponents counter that since all choice architectures are inevitable and designed by someone, deliberately designing them for beneficial outcomes is ethically superior to leaving them to chance or commercial interests.\n\nThe proponent's argument is best understood as:`,
+ choices:[{e:'A rejection of the critics\' premise that nudges manipulate behavior'},{e:'An argument from the inevitability of choice architecture to the preferability of deliberate beneficial design'},{e:'A claim that nudges do not actually affect behavior'},{e:'A rejection of the ethical concerns raised by critics'},{e:'An endorsement of government control over consumer choices'}],
+ answer:1,
+ exp:`Proponents don't deny manipulation or ethical concerns. They argue: since choice architecture always exists (inevitability), it should be designed deliberately for good outcomes rather than accidentally or commercially. This is an "inevitability → better to design well" argument — Answer B.`,},
+
+{id:82,type:'Reading Comprehension',difficulty:2,
+ q:`[Passage] Unlike the Western philosophical tradition, which often treats the individual self as the primary unit of moral analysis, many Indigenous philosophical traditions hold that personhood is fundamentally relational — one becomes a person through one's relationships and responsibilities to family, community, land, and ancestors. From this perspective, ethical obligations are not derived from abstract principles but from the concrete web of relationships in which one is embedded.\n\nThe passage suggests that Indigenous philosophical traditions differ from Western ones primarily in their:`,
+ choices:[{e:'Rejection of ethical obligations entirely'},{e:'View of what constitutes the fundamental unit of moral identity and the source of ethical obligation'},{e:'Belief that community matters more than ethics'},{e:'Emphasis on abstract principles over concrete experience'},{e:'Rejection of the importance of ancestral traditions'}],
+ answer:1,
+ exp:`The key difference: Western = individual as moral unit; Indigenous = relational personhood as moral unit. And Western uses abstract principles; Indigenous uses concrete relationships. Answer B captures both: the fundamental unit and the source of obligation.`,},
+
+{id:83,type:'Reading Comprehension',difficulty:3,
+ q:`[Passage] The "bandwidth" metaphor, used by Mullainathan and Shafir in Scarcity, argues that cognitive resources are like bandwidth — finite and taxable. Poverty imposes a cognitive tax: the mental effort required to manage scarce resources (timing bill payments, stretching food budgets) consumes bandwidth that would otherwise be available for long-term planning, impulse control, and sound decision-making. This helps explain patterns of behavior that critics attribute to poor character but may be structural consequences of scarcity itself.\n\nThe authors' use of the "bandwidth" metaphor serves primarily to:`,
+ choices:[{e:'To argue that poor people have inherently less cognitive ability'},{e:'To provide a mechanistic explanation for behavioral patterns associated with poverty that is structural rather than dispositional'},{e:'To suggest that technology could solve poverty'},{e:'To endorse the view that poverty is the result of character flaws'},{e:'To argue for universal basic income'}],
+ answer:1,
+ exp:`The metaphor explains why poverty causes poor decisions (scarcity taxes bandwidth) without attributing this to inherent character flaws. It's structural (scarcity causes the problem) not dispositional (the person is the problem). Answer B captures this reframing.`,},
+
+{id:84,type:'Reading Comprehension',difficulty:2,
+ q:`[Passage] Urban heat islands — where cities are measurably warmer than surrounding rural areas — develop because buildings, pavement, and dark surfaces absorb and retain heat while vegetation is replaced. Studies show city centers can be 7°F warmer than nearby countryside. Mitigation strategies include green roofs, urban forests, and reflective "cool roofs." However, critics note that green infrastructure investments often flow to wealthy neighborhoods, potentially widening environmental inequality.\n\nWhich concern does the passage raise about the proposed solutions?`,
+ choices:[{e:'They are technically impossible to implement'},{e:'They may exacerbate inequality by concentrating benefits in already-advantaged areas'},{e:'They will not reduce urban temperatures sufficiently'},{e:'They are too expensive for any city to afford'},{e:'They require federal rather than local funding'}],
+ answer:1,
+ exp:`The passage states: "green infrastructure investments often flow to wealthy neighborhoods, potentially widening environmental inequality." This is Answer B — benefits concentrated in already-advantaged areas. A, C, D, and E are not mentioned.`,},
+
+{id:85,type:'Reading Comprehension',difficulty:3,
+ q:`[Passage] The distinction between analytic and synthetic statements, central to logical positivism, was famously challenged by Quine in "Two Dogmas of Empiricism." Analytic statements are true by definition (bachelors are unmarried); synthetic statements are empirically verified (the cat is on the mat). Quine argued the line cannot be clearly drawn: even seemingly analytic statements rest on background assumptions that could in principle be revised in light of evidence. This "web of belief" view holds that no statement is immune to revision.\n\nQuine's argument implies which of the following?`,
+ choices:[{e:'All statements are equally uncertain'},{e:'The boundary between necessary truth and empirical contingency is less sharp than logical positivists claimed'},{e:'Empirical evidence is irrelevant to philosophical claims'},{e:'Language is purely conventional with no necessary truths'},{e:'Logic should replace empirical investigation'}],
+ answer:1,
+ exp:`Quine says even analytic truths can in principle be revised with evidence. This blurs the sharp line logical positivists drew between analytic (necessarily true) and synthetic (empirically contingent). Answer B is the direct implication. A goes too far — Quine doesn't say all truths are equally uncertain.`,},
+
+{id:86,type:'Reading Comprehension',difficulty:2,
+ q:`[Passage] Psychologists distinguish between "intrinsic" motivation — doing something for its own sake, for the inherent pleasure or meaning — and "extrinsic" motivation — doing it for external rewards like money or grades. Research suggests that introducing extrinsic rewards for intrinsically motivated activities can "crowd out" intrinsic motivation, a phenomenon called the "overjustification effect." Children who are paid to read may come to see reading as work rather than pleasure.\n\nThe "overjustification effect" most closely resembles which of the following scenarios?`,
+ choices:[{e:'A student studies more after receiving praise from a teacher'},{e:'A volunteer who begins receiving payment for their charity work gradually loses the satisfaction of giving freely'},{e:'An athlete trains harder after signing a lucrative contract'},{e:'A chef becomes more creative after receiving a prestigious award'},{e:'A musician practices more diligently after receiving a scholarship'}],
+ answer:1,
+ exp:`Overjustification = adding external reward to intrinsically motivated activity reduces intrinsic motivation. The volunteer was intrinsically motivated (free giving = satisfaction). Adding payment makes it feel like "work," crowding out the intrinsic satisfaction. Answer B matches perfectly.`,},
+
+{id:87,type:'Reading Comprehension',difficulty:3,
+ q:`[Passage] The history of cartography reveals how maps are never merely technical documents but always encode the political and ideological assumptions of their makers. The famous Mercator projection, developed in 1569, distorts the relative sizes of landmasses, making Europe and North America appear far larger than they are relative to equatorial regions. Critics argue this creates a subliminal impression of geopolitical importance that mirrors historical colonial hierarchies. Defenders note that the projection has genuine navigational utility, and that criticizing it for political distortion anachronistically applies modern concerns to a pre-modern document.\n\nThe defenders' argument is weakened most by which consideration?`,
+ choices:[{e:'The Mercator projection was the first map ever created'},{e:'Modern use of Mercator projection in schools and media continues long after its navigational utility is the primary concern'},{e:'Mercator himself had no political intentions'},{e:'All maps have some form of distortion'},{e:'The projection is less accurate than GPS'}],
+ answer:1,
+ exp:`Defenders argue the Mercator projection serves navigational utility and criticizing it is anachronistic. But if modern schools and media continue using it without navigational need, the "utility" defense collapses — the political critique then applies to current, not historical, use. Answer B directly undermines this defense.`,},
+
+{id:88,type:'Reading Comprehension',difficulty:2,
+ q:`[Passage] The term "cultural appropriation" has become contested in public discourse. Critics use it to describe situations where members of a dominant cultural group adopt elements of minority cultures without proper attribution, understanding, or compensation—often for profit. Defenders of cross-cultural exchange argue that all cultures borrow from each other, that prohibiting such exchange is itself a form of cultural essentialism, and that exchange, when done respectfully, promotes understanding. Both sides often talk past each other because they are addressing different phenomena under the same label.\n\nThe author's assessment of the debate is best described as:`,
+ choices:[{e:'Strongly in favor of critics of cultural appropriation'},{e:'Strongly in favor of defenders of cultural exchange'},{e:'Diagnostically neutral — identifying a conceptual source of confusion rather than taking sides'},{e:'Dismissive of both sides as intellectually unserious'},{e:'Urging greater government regulation of cultural products'}],
+ answer:2,
+ exp:`The passage summarizes both positions fairly and concludes "both sides often talk past each other because they are addressing different phenomena under the same label." This is a diagnostic observation — identifying conceptual confusion — not taking sides. Answer C.`,},
+
+{id:89,type:'Reading Comprehension',difficulty:3,
+ q:`[Passage] In classical mechanics, the trajectory of a particle is fully determined by its initial position and momentum — give a perfect calculator the state of the universe at any moment, and it could predict all future states. Quantum mechanics undermined this determinism: at the subatomic level, only probabilities can be predicted, not definite outcomes. Einstein famously resisted this interpretation ("God does not play dice"), preferring to believe that quantum indeterminacy reflects our ignorance of hidden variables rather than genuine ontological randomness. Bell's theorem, and subsequent experiments, have largely ruled out local hidden variable theories, supporting the view that quantum indeterminacy is irreducible.\n\nEinstein's position, as described, is best characterized as:`,
+ choices:[{e:'Epistemic humility about the limits of science'},{e:'A commitment to ontological determinism defended through epistemic reinterpretation of quantum indeterminacy'},{e:'Rejection of quantum mechanics as a valid scientific theory'},{e:'Pragmatic acceptance of quantum indeterminacy'},{e:'A religious objection to scientific materialism'}],
+ answer:1,
+ exp:`Einstein accepted quantum math but reinterpreted indeterminacy epistemically (we don't know hidden variables) to preserve ontological determinism (reality is still determined). He kept determinism by claiming indeterminacy is epistemic (our ignorance), not ontological (actual randomness). Answer B captures this precisely.`,},
+
+{id:90,type:'Reading Comprehension',difficulty:2,
+ q:`[Passage] Women's participation in the paid labor force increased dramatically throughout the twentieth century in most industrialized nations. Multiple factors contributed: feminist movements challenging traditional gender roles, economic necessity during wartime, expansion of service-sector jobs deemed compatible with female employment, and improved access to education. Despite this progress, persistent gaps in pay and leadership representation remain. Sociologists debate whether these gaps primarily reflect discrimination, the undervaluing of female-dominated professions, different career choices influenced by still-unequal domestic responsibilities, or some combination of all three.\n\nThe passage suggests that persistent wage gaps are best understood as:`,
+ choices:[{e:'Entirely the result of intentional discrimination'},{e:'A multifactorial phenomenon without a single definitive explanation'},{e:'The result of women choosing lower-paying careers'},{e:'Primarily caused by undervaluation of female-dominated professions'},{e:'A problem that has been largely solved'}],
+ answer:1,
+ exp:`The passage says sociologists debate three possible causes: discrimination, undervaluing female professions, different career choices — or "some combination of all three." This indicates multifactorial, not single-cause. Answer B. A, C, and D each offer one cause as primary — contradicted by the passage.`,},
+
+// ── ANALOGIES (Q91-100) ─────────────────────────────
+{id:91,type:'Analogies',difficulty:2,
+ q:`ENERVATE : VITALITY :: ADULTERATE : ___`,
+ choices:[{e:'purity'},{e:'contamination'},{e:'corruption'},{e:'mixture'},{e:'substance'}],
+ answer:0,
+ exp:`"Enervate" means to drain vitality (vigor). "Adulterate" means to impure purity (by adding inferior substances). The relationship: verb → the thing it destroys/reduces. Enervate:vitality = adulterate:purity.`,},
+
+{id:92,type:'Analogies',difficulty:2,
+ q:`CHARLATAN : AUTHENTICITY :: SYCOPHANT : ___`,
+ choices:[{e:'sincerity'},{e:'flattery'},{e:'praise'},{e:'loyalty'},{e:'obedience'}],
+ answer:0,
+ exp:`A charlatan lacks authenticity — it's what defines their negative character. A sycophant lacks sincerity — their flattery is hollow and self-serving, not genuine. The relationship is: person → the virtue they fundamentally lack.`,},
+
+{id:93,type:'Analogies',difficulty:3,
+ q:`PROLIX : WORDS :: SPENDTHRIFT : ___`,
+ choices:[{e:'money'},{e:'time'},{e:'energy'},{e:'resources'},{e:'talent'}],
+ answer:0,
+ exp:`"Prolix" means using too many words — excessive with words. "Spendthrift" means spending excessively — excessive with money. The relationship: adjective → what is used in excess.`,},
+
+{id:94,type:'Analogies',difficulty:2,
+ q:`LACONIC : SPEECH :: PARSIMONIOUS : ___`,
+ choices:[{e:'money'},{e:'effort'},{e:'time'},{e:'praise'},{e:'advice'}],
+ answer:0,
+ exp:`"Laconic" means using very few words — economical with speech. "Parsimonious" means very unwilling to spend — economical with money. The relationship: adjective → what one is stingy/economical with.`,},
+
+{id:95,type:'Analogies',difficulty:3,
+ q:`SOPHISTRY : REASONING :: COUNTERFEIT : ___`,
+ choices:[{e:'currency'},{e:'imitation'},{e:'fraud'},{e:'deception'},{e:'reproduction'}],
+ answer:0,
+ exp:`Sophistry is false/misleading reasoning that resembles valid reasoning. A counterfeit is a false/fake currency that resembles genuine currency. The relationship: something that mimics the real thing deceptively. The analogous word must be what is counterfeited.`,},
+
+{id:96,type:'Analogies',difficulty:2,
+ q:`PALLIATIVE : PAIN :: BALM : ___`,
+ choices:[{e:'irritation'},{e:'medicine'},{e:'healing'},{e:'suffering'},{e:'wound'}],
+ answer:0,
+ exp:`A palliative relieves pain (temporarily; without curing). A balm soothes irritation (calms, provides relief from discomfort). The relationship: remedy → what it soothes/relieves.`,},
+
+{id:97,type:'Analogies',difficulty:3,
+ q:`ICONOCLAST : TRADITION :: REVISIONIST : ___`,
+ choices:[{e:'orthodoxy'},{e:'history'},{e:'change'},{e:'innovation'},{e:'reform'}],
+ answer:0,
+ exp:`An iconoclast challenges/attacks tradition. A revisionist challenges established orthodoxy (accepted interpretations). The relationship: agent → what they challenge. History (B) is what revisionists work with, but orthodoxy is what they challenge.`,},
+
+{id:98,type:'Analogies',difficulty:2,
+ q:`TEMERITY : CAUTION :: OBSTINACY : ___`,
+ choices:[{e:'flexibility'},{e:'stubbornness'},{e:'resolve'},{e:'strength'},{e:'conviction'}],
+ answer:0,
+ exp:`"Temerity" means excessive boldness — it lacks caution (caution is the virtue it overcomes). "Obstinacy" means stubborn refusal to change — it lacks flexibility. The relationship: vice → the virtue it supplants/opposes.`,},
+
+{id:99,type:'Analogies',difficulty:3,
+ q:`LOQUACIOUS : VOLUBILITY :: PHLEGMATIC : ___`,
+ choices:[{e:'impassivity'},{e:'apathy'},{e:'sluggishness'},{e:'composure'},{e:'lethargy'}],
+ answer:0,
+ exp:`"Loquacious" means talkative; "volubility" is the noun form (talkativeness). "Phlegmatic" means not easily excited; "impassivity" is the noun form (lack of emotion/reaction). The relationship: adjective → its noun form.`,},
+
+{id:100,type:'Analogies',difficulty:3,
+ q:`PERFIDIOUS : LOYALTY :: MENDACIOUS : ___`,
+ choices:[{e:'truthfulness'},{e:'honesty'},{e:'candor'},{e:'sincerity'},{e:'integrity'}],
+ answer:0,
+ exp:`"Perfidious" (treacherous) is the antonym of "loyalty." "Mendacious" (lying) is the antonym of "truthfulness." The relationship: adjective → the virtue that is its direct antonym. While honesty and candor are related, "truthfulness" is the most direct antonym to mendacious.`,}
+];
+
+// ─── STATE ───────────────────────────────────────────
+let filteredQ = [...ALL_QUESTIONS];
+let currentIndex = 0;
+let userAnswers = {}; // {questionId: answerIndex | null}
+let correctCount = 0, wrongCount = 0;
+let currentCat = 'all';
+
+// ─── INIT ─────────────────────────────────────────────
+function init() {
+  filteredQ = currentCat === 'all' ? [...ALL_QUESTIONS] : ALL_QUESTIONS.filter(q => q.type === currentCat);
+  renderNavDots();
+  renderQuestion();
+}
+
+function filterCat(cat, btn) {
+  currentCat = cat;
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentIndex = 0;
+  init();
+}
+
+// ─── NAV DOTS ─────────────────────────────────────────
+function renderNavDots() {
+  const nav = document.getElementById('qCounterNav');
+  nav.innerHTML = '';
+  filteredQ.forEach((q, i) => {
+    const d = document.createElement('button');
+    d.className = 'q-nav-dot';
+    d.textContent = i + 1;
+    if (i === currentIndex) d.classList.add('current');
+    const ans = userAnswers[q.id];
+    if (ans !== undefined) {
+      if (ans === q.answer) d.classList.add('qd-correct');
+      else d.classList.add('qd-wrong');
+    }
+    d.onclick = () => goTo(i);
+    nav.appendChild(d);
+  });
+}
+
+// ─── RENDER QUESTION ─────────────────────────────────
+function renderQuestion() {
+  const q = filteredQ[currentIndex];
+  if (!q) return;
+
+  // stats
+  document.getElementById('statQ').textContent = currentIndex + 1;
+  const attempted = Object.keys(userAnswers).length;
+  const acc = attempted > 0 ? Math.round((correctCount / attempted) * 100) : '—';
+  document.getElementById('statC').textContent = correctCount;
+  document.getElementById('statW').textContent = wrongCount;
+  document.getElementById('statAcc').textContent = attempted > 0 ? acc + '%' : '—';
+  document.getElementById('progressBar').style.width = ((currentIndex + 1) / filteredQ.length * 100) + '%';
+
+  // build card
+  const diffDots = [1,2,3].map(n => `<span class="diff-dot${n<=q.difficulty?' filled':''}"></span>`).join('');
+  const typeBadge = {
+    'Vocabulary':'badge-vocab','Sentence Equivalence':'badge-sentence',
+    'Text Completion':'badge-reading','Reading Comprehension':'badge-reading',
+    'Analogies':'badge-analogy'
+  }[q.type] || 'badge-vocab';
+
+  const answered = userAnswers[q.id] !== undefined;
+  const userAns = userAnswers[q.id];
+
+  let choicesHTML = q.choices.map((c, i) => {
+    let cls = 'choice';
+    if (answered) {
+      cls += ' locked';
+      if (i === q.answer) cls += ' correct';
+      else if (i === userAns) cls += ' wrong';
+    }
+    return `<button class="${cls}" onclick="selectChoice(${i})">
+      <span class="choice-letter">${String.fromCharCode(65+i)}</span>
+      <span class="choice-text">${c.e}</span>
+    </button>`;
+  }).join('');
+
+  let resultBanner = '';
+  if (answered) {
+    const isCorrect = userAns === q.answer;
+    resultBanner = `<div class="result-banner ${isCorrect?'correct-banner':'wrong-banner'}">
+      ${isCorrect ? '✓ پاسخ Correct!' : `✗ پاسخ اشتباه — جواب درست: ${String.fromCharCode(65+q.answer)}`}
+    </div>`;
+  }
+
+  let expHTML = answered ? `<div class="explanation">
+    <div class="explanation-header"><span class="explanation-icon">💡</span><span class="explanation-title">Explanation</span></div>
+    <div class="explanation-text">${q.exp}</div>
+  </div>` : '';
+
+  document.getElementById('qCard').innerHTML = `
+    <div class="q-meta">
+      <span class="q-num">Question ${currentIndex+1} ${filteredQ.length}</span>
+      <span class="q-type-badge ${typeBadge}">${q.type}</span>
+      <span class="q-difficulty">${diffDots}</span>
+    </div>
+    <div class="q-text">${q.q.replace(/\n/g,'<br>')}</div>
+    <div class="choices">${choicesHTML}</div>
+    ${resultBanner}
+    ${expHTML}
+  `;
+
+  // buttons
+  document.getElementById('btnPrev').disabled = currentIndex === 0;
+  document.getElementById('btnNext').disabled = currentIndex >= filteredQ.length - 1;
+  document.getElementById('btnSubmit').style.display = answered ? 'none' : 'flex';
+
+  renderNavDots();
+}
+
+let selectedChoice = null;
+
+function selectChoice(i) {
+  const q = filteredQ[currentIndex];
+  if (userAnswers[q.id] !== undefined) return;
+  selectedChoice = i;
+  document.querySelectorAll('.choice').forEach((el, idx) => {
+    el.classList.toggle('selected', idx === i);
+  });
+}
+
+function submitAnswer() {
+  if (selectedChoice === null) { alert('Please select an answer first'); return; }
+  const q = filteredQ[currentIndex];
+  userAnswers[q.id] = selectedChoice;
+  if (selectedChoice === q.answer) correctCount++;
+  else wrongCount++;
+  selectedChoice = null;
+  renderQuestion();
+}
+
+function goTo(i) {
+  if (i < 0 || i >= filteredQ.length) return;
+  selectedChoice = null;
+  currentIndex = i;
+  renderQuestion();
+}
+
+// ─── SUMMARY ─────────────────────────────────────────
+function showSummary() {
+  document.getElementById('quizView').style.display = 'none';
+  document.getElementById('wordlist').style.display = 'none';
+  document.getElementById('summary').style.display = 'block';
+
+  const attempted = Object.keys(userAnswers).length;
+  const pct = attempted > 0 ? Math.round(correctCount/attempted*100) : 0;
+  const icon = pct >= 80 ? '🏆' : pct >= 60 ? '🎓' : pct >= 40 ? '📚' : '🔄';
+
+  document.getElementById('summaryIcon').textContent = icon;
+  document.getElementById('summaryScore').textContent = pct + '%';
+  document.getElementById('summaryDenom').textContent = `${attempted} questions answered`;
+  document.getElementById('sumCorrect').textContent = correctCount;
+  document.getElementById('sumWrong').textContent = wrongCount;
+  document.getElementById('sumSkip').textContent = ALL_QUESTIONS.length - attempted;
+
+  // breakdown by category
+  const cats = ['Vocabulary','Sentence Equivalence','Text Completion','Reading Comprehension','Analogies'];
+  const catNames = {
+    'Vocabulary':'Vocabulary','Sentence Equivalence':'Sentence Equivalence',
+    'Text Completion':'Text Completion','Reading Comprehension':'Reading Comprehension','Analogies':'Analogies'
+  };
+  let rows = '';
+  cats.forEach(cat => {
+    const qs = ALL_QUESTIONS.filter(q => q.type === cat);
+    const ans = qs.filter(q => userAnswers[q.id] !== undefined);
+    const cor = qs.filter(q => userAnswers[q.id] === q.answer);
+    rows += `<div class="breakdown-row">
+      <span>${catNames[cat]}</span>
+      <span>${cor.length}/${ans.length} Correct</span>
+    </div>`;
+  });
+  document.getElementById('breakdownRows').innerHTML = rows;
+}
+
+function showQuiz() {
+  document.getElementById('quizView').style.display = 'block';
+  document.getElementById('summary').style.display = 'none';
+  document.getElementById('wordlist').style.display = 'none';
+  renderQuestion();
+}
+
+function resetAll() {
+  userAnswers = {}; correctCount = 0; wrongCount = 0; currentIndex = 0; selectedChoice = null;
+  showQuiz();
+}
+
+// ─── WORDLIST ─────────────────────────────────────────
+const VOCAB_GLOSSARY = [
+  {e:'Perspicuity'},
+  {e:'Obfuscation'},
+  {e:'Rapprochement'},
+  {e:'Munificent'},
+  {e:'Eclecticism'},
+  {e:'Incisive'},
+  {e:'Assiduous'},
+  {e:'Equivocation'},
+  {e:'Tendentious'},
+  {e:'Pariah'},
+  {e:'Bombast'},
+  {e:'Labyrinthine'},
+  {e:'Callowness'},
+  {e:'Seminal'},
+  {e:'Peremptory'},
+  {e:'Lapidary'},
+  {e:'Mordant'},
+  {e:'Altruistic'},
+  {e:'Inquisitiveness'},
+  {e:'Felicity'},
+  {e:'Anodyne'},
+  {e:'Overwrought'},
+  {e:'Intransigent'},
+  {e:'Hubristic'},
+  {e:'Hagiography'},
+  {e:'Imperturbable'},
+  {e:'Discredited'},
+  {e:'Generative'},
+  {e:'Injudicious'},
+  {e:'Abstruse'},
+  {e:'Moribund'},
+  {e:'Provisionally'},
+  {e:'Fallibilism'},
+  {e:'Reductive'},
+  {e:'Revisionist'},
+  {e:'Volte-face'},
+  {e:'Specious'},
+  {e:'Mawkish'},
+  {e:'Onerous'},
+  {e:'Dilatory'},
+  {e:'Economy (in writing)'},
+  {e:'Exuberant'},
+  {e:'Autocratic'},
+  {e:'Diffident'},
+  {e:'Epistemic humility'},
+  {e:'Ethnocentrism'},
+  {e:'Regulatory capture'},
+  {e:'Overjustification effect'},
+  {e:'Nudge theory'},
+  {e:'Laconic'},
+  {e:'Parsimonious'}
+];
+
+function showWordlist() {
+  document.getElementById('quizView').style.display = 'none';
+  document.getElementById('summary').style.display = 'none';
+  document.getElementById('wordlist').style.display = 'block';
+
+  const grid = document.getElementById('wordGrid');
+  grid.innerHTML = VOCAB_GLOSSARY.map(w => {
+    const q = ALL_QUESTIONS.find(q =>
+      q.choices.some(c => c.e.toLowerCase().includes(w.e.toLowerCase())) ||
+      q.q.toLowerCase().includes(w.e.toLowerCase())
+    );
+    let statusCls = 'ws-unattempted', statusTitle = 'Unanswered';
+    if (q && userAnswers[q.id] !== undefined) {
+      const correct = userAnswers[q.id] === q.answer;
+      statusCls = correct ? 'ws-correct' : 'ws-wrong';
+      statusTitle = correct ? 'Correct' : 'Wrong';
+    }
+    return `<div class="word-chip">
+      <div>
+        <div class="word-en">${w.e}</div>
+      </div>
+      <div class="word-status ${statusCls}" title="${statusTitle}"></div>
+    </div>`;
+  }).join('');
+}
+
+// ─── BOOT ─────────────────────────────────────────────
+init();
+</script>
+</body>
+</html>
