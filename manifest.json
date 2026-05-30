@@ -1,0 +1,15 @@
+{
+  "name": "GRE Verbal Practice",
+  "short_name": "GRE Verbal",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f5efe4",
+  "theme_color": "#1a1209",
+  "icons": [
+    {
+      "src": "https://via.placeholder.com/192x192/1a1209/c8963e?text=GRE",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}
