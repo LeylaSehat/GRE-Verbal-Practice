@@ -1,5 +1,16 @@
-# Interactive GRE Verbal Practice Dashboard  
+# IGRE Verbal Practice App  
 ![Dashboard Preview](gre-practice-app.PNG)
-This is a simple interactive GRE verbal practice dashboard that I originally built for my own study and practice.
-It has vocabulary, sentence equivalence, text completion, and reading comprehension questions. Each one comes with explanations and GRE tips.
-I’m sharing it here in case it helps you with the GRE. It has 100 vocabulary questions and could be a useful resource for your preparation.
+This project started as a personal challenge.
+
+I realized that simply memorizing vocabulary from flashcards felt repetitive and wasn't an engaging way for me to learn. Also, I've always enjoyed creating something useful alongside whatever I'm learning. While preparing for the GRE, I found that reviewing vocabulary with traditional flashcards quickly became repetitive and boring. So instead of relying on flashcards and books, I challenged myself to build my own app that is interactive, engaging, and more enjoyable to use.
+
+This project is the result.
+
+The app includes more than 100 practice questions covering:
+
+- Vocabulary
+- Sentence Equivalence
+- Text Completion
+- Reading Comprehension
+
+Each question includes explanations and study tips to reinforce learning rather than simply revealing the correct answer.
