@@ -1,4 +1,4 @@
-# IGRE Verbal Practice App  
+# GRE Verbal Practice App  
 ![Dashboard Preview](gre-practice-app.PNG)
 This project started as a personal challenge.
 
